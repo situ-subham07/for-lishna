@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Situ ❤️ Lishna</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Sacramento&family=Great+Vibes&family=Caveat:wght@400;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 1 — CINEMATIC INTRO
+═══════════════════════════════════════════════════════ -->
+<section id="intro-scene">
+
+  <!-- Star canvas -->
+  <canvas id="star-canvas"></canvas>
+
+  <!-- Firefly canvas -->
+  <canvas id="firefly-canvas"></canvas>
+
+  <!-- 3-D Envelope -->
+  <div id="envelope-wrapper">
+    <div id="envelope-3d">
+
+      <!-- Envelope body -->
+      <div class="env-body">
+        <div class="env-left-flap"></div>
+        <div class="env-right-flap"></div>
+        <div class="env-bottom-flap"></div>
+
+        <!-- Top (opening) flap -->
+        <div class="env-top-flap">
+          <!-- Wax seal -->
+          <div id="wax-seal">
+            <span class="seal-icon">❤</span>
+          </div>
+        </div>
+
+        <!-- Letter inside -->
+        <div id="letter-slide">
+          <div class="letter-paper">
+            <p class="letter-preview">Dearest Lishna...</p>
+          </div>
+        </div>
+
+        <!-- Heart burst container -->
+        <div id="heart-burst"></div>
+      </div>
+
+    </div><!-- /envelope-3d -->
+
+    <!-- Glow ring -->
+    <div class="env-glow-ring"></div>
+  </div><!-- /envelope-wrapper -->
+
+  <!-- Tagline -->
+  <p id="intro-tagline">Someone left a letter for you...</p>
+
+  <!-- CTA button -->
+  <button id="open-letter-btn">💌 Open the Letter</button>
+
+  <!-- Sparkles overlay -->
+  <canvas id="sparkle-canvas"></canvas>
+
+</section><!-- /intro-scene -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2 — LOVE LETTER (multi-page flip)
+═══════════════════════════════════════════════════════ -->
+<section id="letter-section" class="hidden-section">
+
+  <!-- Mascot -->
+  <div class="mascot" id="mascot-letter" data-msg="Keep reading...">
+    <div class="mascot-body">🐻</div>
+    <div class="mascot-bubble">Keep reading...</div>
+  </div>
+
+  <div id="letter-book">
+
+    <!-- Page 1 -->
+    <div class="letter-page active-page" id="page-1">
+      <div class="page-inner front">
+        <div class="page-lines"></div>
+        <div class="page-content">
+          <h2 class="letter-heading">Dearest Lishna,</h2>
+          <p class="letter-body typewriter" data-text="There are moments in life that arrive without warning — quiet, unhurried, and yet somehow they change everything."></p>
+          <p class="letter-body typewriter" data-text="You were one of those moments for me."></p>
+          <p class="letter-body typewriter" data-text="I have tried many times to write this down, crumpling pages and starting again. Each attempt felt too small for what I was trying to say."></p>
+          <p class="letter-body typewriter" data-text="So tonight, under a sky full of stars, I decided to simply tell the truth — without pretense, without rehearsal."></p>
+          <p class="letter-signature">— With quiet honesty</p>
+        </div>
+      </div>
+      <div class="page-inner back"></div>
+    </div>
+
+    <!-- Page 2 -->
+    <div class="letter-page" id="page-2">
+      <div class="page-inner front">
+        <div class="page-lines"></div>
+        <div class="page-content">
+          <h2 class="letter-heading">What I Notice...</h2>
+          <p class="letter-body">I notice the way you carry kindness like it weighs nothing.</p>
+          <p class="letter-body">The way your attention, when it lands on someone, makes them feel truly seen.</p>
+          <p class="letter-body">I notice the small things — the way you pause before answering, as if every word matters. Because to you, it does.</p>
+          <p class="letter-body">I notice how the room shifts, just a little, whenever you're in it.</p>
+          <p class="letter-body">And I notice that I've started noticing all of this — which tells me something important.</p>
+        </div>
+      </div>
+      <div class="page-inner back"></div>
+    </div>
+
+    <!-- Page 3 -->
+    <div class="letter-page" id="page-3">
+      <div class="page-inner front">
+        <div class="page-lines"></div>
+        <div class="page-content">
+          <h2 class="letter-heading">What I Feel...</h2>
+          <p class="letter-body">It isn't fireworks, the way stories describe.</p>
+          <p class="letter-body">It's quieter than that. It's more like warmth — the kind that stays.</p>
+          <p class="letter-body">When you're around, something in me settles. And when you're not, I find myself hoping you're doing well, wherever you are.</p>
+          <p class="letter-body">I feel grateful — simply to know you exist in this world, and that somehow, our paths have crossed.</p>
+          <p class="letter-body">That gratefulness has slowly grown into something I can no longer keep to myself.</p>
+        </div>
+      </div>
+      <div class="page-inner back"></div>
+    </div>
+
+    <!-- Page 4 -->
+    <div class="letter-page" id="page-4">
+      <div class="page-inner front">
+        <div class="page-lines"></div>
+        <div class="page-content">
+          <h2 class="letter-heading">What I'm Not Asking...</h2>
+          <p class="letter-body">I am not asking you to feel what I feel.</p>
+          <p class="letter-body">I am not asking you to change anything about your life, your plans, or your heart.</p>
+          <p class="letter-body">Feelings, when honest, do not demand — they simply arrive and offer themselves quietly.</p>
+          <p class="letter-body">So this is not a demand. It is not a plea. It is just a truth, offered gently, with both hands open.</p>
+          <p class="letter-body">Whatever you hold or set down — I will understand.</p>
+        </div>
+      </div>
+      <div class="page-inner back"></div>
+    </div>
+
+    <!-- Page 5 — Final -->
+    <div class="letter-page" id="page-5">
+      <div class="page-inner front">
+        <div class="page-lines"></div>
+        <div class="page-content">
+          <h2 class="letter-heading">What I Do Know...</h2>
+          <p class="letter-body">I know that some things are worth saying, even if the answer is uncertain.</p>
+          <p class="letter-body">I know that kindness costs nothing and that honesty, offered with care, is a form of respect.</p>
+          <p class="letter-body">I know that whatever happens next, I will always wish you happiness — full, beautiful, uninterrupted happiness.</p>
+          <p class="letter-body">And I know that writing these words, even into the uncertainty, was worth every moment.</p>
+          <p class="letter-body">Thank you for reading this far, Lishna.</p>
+          <p class="letter-signature">With genuine care,<br><em>Situ</em> 🌸</p>
+        </div>
+      </div>
+      <div class="page-inner back"></div>
+    </div>
+
+    <!-- Page navigation -->
+    <div id="page-controls">
+      <button id="prev-page" disabled>← Previous</button>
+      <span id="page-indicator">Page 1 of 5</span>
+      <button id="next-page">Next →</button>
+    </div>
+
+  </div><!-- /letter-book -->
+
+</section><!-- /letter-section -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3 — MAGICAL NIGHT SKY
+═══════════════════════════════════════════════════════ -->
+<section id="night-sky-section" class="hidden-section">
+
+  <canvas id="night-canvas"></canvas>
+
+  <div id="constellation-label">Watch the stars...</div>
+
+  <div class="mascot" id="mascot-sky" data-msg="I think someone likes you ❤️">
+    <div class="mascot-body">🦊</div>
+    <div class="mascot-bubble">I think someone likes you ❤️</div>
+  </div>
+
+  <button class="section-next-btn" id="sky-next-btn">Continue the Journey ✨</button>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4 — MEMORY GARDEN
+═══════════════════════════════════════════════════════ -->
+<section id="garden-section" class="hidden-section">
+
+  <canvas id="garden-bg-canvas"></canvas>
+
+  <h2 class="garden-title">🌸 The Memory Garden</h2>
+  <p class="garden-subtitle">Click any flower to reveal a hidden shayari...</p>
+
+  <div id="garden-container">
+    <!-- Flowers injected by JS -->
+  </div>
+
+  <!-- Flower Card Modal -->
+  <div id="flower-card-modal" class="hidden">
+    <div class="flower-card-inner">
+      <button id="close-flower-card">✕</button>
+      <div id="flower-card-content"></div>
+    </div>
+  </div>
+
+  <div class="mascot" id="mascot-garden" data-msg="You have a beautiful smile.">
+    <div class="mascot-body">🐱</div>
+    <div class="mascot-bubble">You have a beautiful smile.</div>
+  </div>
+
+  <button class="section-next-btn" id="garden-next-btn">One Last Page... 💌</button>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 5 — FINAL CONFESSION
+═══════════════════════════════════════════════════════ -->
+<section id="final-section" class="hidden-section">
+
+  <canvas id="final-particles-canvas"></canvas>
+
+  <div id="final-letter-wrapper">
+
+    <div id="final-letter">
+      <p class="final-line">Lishna,</p>
+      <p class="final-line">Thank you for reading this far.</p>
+      <p class="final-line">I know life doesn't always follow the stories we imagine.</p>
+      <p class="final-line">I don't expect this website to change your heart, and I don't want it to.</p>
+      <p class="final-line">I only wanted to share what mine has been holding.</p>
+      <p class="final-line">Whatever your answer is, I'll respect it sincerely.</p>
+      <p class="final-line">If this is where our paths meet, I'll always be grateful for the chance to tell you how I feel.</p>
+      <p class="final-line">And if our paths someday walk together, I'll be even more grateful.</p>
+      <p class="final-signature">— Situ 🌸</p>
+    </div>
+
+    <!-- Response Card -->
+    <div id="response-card">
+      <h3>💗 Your Thoughts</h3>
+
+      <label for="msg-input">Write anything that's in your heart...</label>
+      <textarea id="msg-input" placeholder="Write anything that's in your heart..."></textarea>
+
+      <label for="feeling-input">How do you honestly feel about me?</label>
+      <textarea id="feeling-input" placeholder="Your honest feelings..."></textarea>
+
+      <div id="response-error" class="hidden"></div>
+
+      <div id="response-buttons">
+        <button id="send-btn">🌸 Send My Answer</button>
+        <button id="later-btn">💌 Maybe Later</button>
+      </div>
+
+      <div id="response-success" class="hidden">
+        <div class="success-heart">💗</div>
+        <p id="success-message"></p>
+      </div>
+    </div>
+
+  </div><!-- /final-letter-wrapper -->
+
+  <div class="mascot" id="mascot-final" data-msg="This page is my favorite.">
+    <div class="mascot-body">🐰</div>
+    <div class="mascot-bubble">This page is my favorite.</div>
+  </div>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     GLOBAL OVERLAYS
+═══════════════════════════════════════════════════════ -->
+
+<!-- Heart cursor canvas -->
+<canvas id="heart-cursor-canvas"></canvas>
+
+<!-- Navigation dots -->
+<nav id="section-nav">
+  <span class="nav-dot active" data-section="intro-scene"    title="Intro"></span>
+  <span class="nav-dot"        data-section="letter-section" title="Letter"></span>
+  <span class="nav-dot"        data-section="night-sky-section" title="Stars"></span>
+  <span class="nav-dot"        data-section="garden-section" title="Garden"></span>
+  <span class="nav-dot"        data-section="final-section"  title="Confession"></span>
+</nav>
+
+<!-- Music Player -->
+<div id="music-player">
+  <button id="mute-btn" title="Mute / Unmute">🔊</button>
+  <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.5" title="Volume" />
+  <span id="now-playing">♪ Intro Piano</span>
+  <canvas id="visualizer-canvas"></canvas>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
