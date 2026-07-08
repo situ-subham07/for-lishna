@@ -26,180 +26,176 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background : #000;
-  color      : #fff;
-  font-family: var(--font-cave);
-  overflow-x : hidden;
-  cursor     : none;   /* we'll draw a custom cursor */
-}
-
-/* ── Hidden sections ──────────────────────────────────── */
-.hidden-section {
-  opacity   : 0;
-  transform : translateY(60px);
-  transition: opacity 1.2s var(--transition), transform 1.2s var(--transition);
-  pointer-events: none;
-  position  : relative;
-}
-.hidden-section.visible {
-  opacity       : 1;
-  transform     : translateY(0);
-  pointer-events: all;
+  background  : #000;
+  color       : #fff;
+  font-family : var(--font-cave);
+  overflow-x  : hidden;
 }
 
 /* ═══════════════════════════════════════════════════════
-   SECTION GENERAL LAYOUT
+   SECTION VISIBILITY SYSTEM
+   This is the core fix — simple show/hide
 ═══════════════════════════════════════════════════════ */
 section {
-  min-height: 100vh;
-  width     : 100%;
-  position  : relative;
-  display   : flex;
-  flex-direction : column;
-  align-items    : center;
-  justify-content: center;
-  padding   : 60px 24px;
-  overflow  : hidden;
+  min-height      : 100vh;
+  width           : 100%;
+  position        : relative;
+  display         : none;          /* ALL sections hidden by default */
+  flex-direction  : column;
+  align-items     : center;
+  justify-content : center;
+  padding         : 60px 24px;
+  overflow        : hidden;
+  opacity         : 0;
+  transition      : opacity 1s ease;
+}
+
+/* Only active sections are shown */
+section.show {
+  display : flex;
+  opacity : 1;
+}
+
+/* Fade-in animation when section appears */
+section.fade-in {
+  animation: sectionFadeIn 1.2s ease forwards;
+}
+
+@keyframes sectionFadeIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ═══════════════════════════════════════════════════════
    INTRO SCENE
 ═══════════════════════════════════════════════════════ */
 #intro-scene {
-  background : radial-gradient(ellipse at center, #090414 0%, #000 100%);
+  background: radial-gradient(ellipse at center, #090414 0%, #000 100%);
 }
 
-/* Canvases — always behind everything */
 #star-canvas, #firefly-canvas, #sparkle-canvas {
   position: absolute;
-  inset    : 0;
-  width    : 100%;
-  height   : 100%;
+  inset   : 0;
+  width   : 100%;
+  height  : 100%;
   pointer-events: none;
 }
 #star-canvas    { z-index: 1; }
 #firefly-canvas { z-index: 2; }
-#sparkle-canvas { z-index: 10; pointer-events: none; }
+#sparkle-canvas { z-index: 10; }
 
-/* ── Envelope wrapper ─────────────────────────────────── */
+/* Envelope wrapper */
 #envelope-wrapper {
-  position : relative;
-  z-index  : 5;
-  display  : flex;
+  position       : relative;
+  z-index        : 5;
+  display        : flex;
   flex-direction : column;
   align-items    : center;
-  animation: float-envelope 4s ease-in-out infinite;
+  animation      : float-envelope 4s ease-in-out infinite;
   transform-style: preserve-3d;
 }
 
 @keyframes float-envelope {
   0%,100% { transform: translateY(0px) rotateX(0deg); }
-  50%      { transform: translateY(-18px) rotateX(3deg); }
+  50%     { transform: translateY(-18px) rotateX(3deg); }
 }
 
 #envelope-3d {
-  width       : 320px;
-  height      : 220px;
-  position    : relative;
+  width          : 320px;
+  height         : 220px;
+  position       : relative;
   transform-style: preserve-3d;
-  perspective : 1000px;
-  transition  : transform .1s linear;
-  filter      : drop-shadow(0 0 40px rgba(255,180,210,.45));
+  perspective    : 1000px;
+  transition     : transform .1s linear;
+  filter         : drop-shadow(0 0 40px rgba(255,180,210,.45));
 }
 
-/* ── Envelope body ───────────────────────────────────── */
 .env-body {
-  width      : 320px;
-  height     : 220px;
-  background : linear-gradient(135deg, #f8d7e4 0%, #fce4ec 50%, #f48fb1 100%);
+  width        : 320px;
+  height       : 220px;
+  background   : linear-gradient(135deg, #f8d7e4 0%, #fce4ec 50%, #f48fb1 100%);
   border-radius: 8px;
-  position   : relative;
-  overflow   : visible;
-  box-shadow :
+  position     : relative;
+  overflow     : visible;
+  box-shadow   :
     0 8px 32px rgba(200,80,120,.4),
     inset 0 1px 0 rgba(255,255,255,.6),
     inset 0 -1px 0 rgba(0,0,0,.1);
 }
 
-/* V-shaped flaps */
-.env-left-flap,
-.env-right-flap,
-.env-bottom-flap {
-  position  : absolute;
-  bottom    : 0;
-  border    : solid transparent;
+.env-left-flap, .env-right-flap, .env-bottom-flap {
+  position: absolute;
+  bottom  : 0;
+  border  : solid transparent;
 }
 .env-left-flap {
-  left   : 0;
+  left: 0;
   border-width: 110px 0 0 160px;
   border-left-color: #f0a0b8;
 }
 .env-right-flap {
-  right  : 0;
+  right: 0;
   border-width: 110px 160px 0 0;
   border-right-color: #f0a0b8;
 }
 .env-bottom-flap {
-  left   : 0; right: 0;
+  left: 0; right: 0;
   border-width: 0 160px 110px;
   border-bottom-color: #f8c0d4;
 }
 
-/* Top opening flap */
 .env-top-flap {
-  position  : absolute;
-  top       : 0; left: 0; right: 0;
-  height    : 110px;
-  background: linear-gradient(135deg, #f8bbd0, #fce4ec);
-  clip-path : polygon(0 0, 100% 0, 50% 100%);
+  position        : absolute;
+  top: 0; left: 0; right: 0;
+  height          : 110px;
+  background      : linear-gradient(135deg, #f8bbd0, #fce4ec);
+  clip-path       : polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top center;
-  transform : rotateX(0deg);
-  transition: transform 1.2s var(--transition);
-  z-index   : 10;
+  transform       : rotateX(0deg);
+  transition      : transform 1.2s var(--transition);
+  z-index         : 10;
 }
 
-/* Wax seal */
 #wax-seal {
-  position  : absolute;
-  top       : 55px; left: 50%;
-  transform : translateX(-50%);
-  width     : 50px; height: 50px;
-  background: radial-gradient(circle, #c0392b, #922b21);
-  border-radius: 50%;
-  display   : flex;
-  align-items: center;
+  position      : absolute;
+  top: 55px; left: 50%;
+  transform     : translateX(-50%);
+  width: 50px; height: 50px;
+  background    : radial-gradient(circle, #c0392b, #922b21);
+  border-radius : 50%;
+  display       : flex;
+  align-items   : center;
   justify-content: center;
-  box-shadow: 0 2px 12px rgba(150,0,0,.6), inset 0 1px 0 rgba(255,255,255,.2);
-  z-index   : 11;
-  transition: transform 1s var(--transition), opacity .8s;
+  box-shadow    : 0 2px 12px rgba(150,0,0,.6), inset 0 1px 0 rgba(255,255,255,.2);
+  z-index       : 11;
+  transition    : transform 1s var(--transition), opacity .8s;
 }
 .seal-icon { color: #fff; font-size: 1.4rem; }
 
-/* ── Envelope open states ────────────────────────────── */
 #envelope-wrapper.opening .env-top-flap {
-  transform : rotateX(-150deg);
+  transform: rotateX(-150deg);
 }
 #envelope-wrapper.opening #wax-seal {
-  transform : translateX(-50%) scale(0);
-  opacity   : 0;
+  transform: translateX(-50%) scale(0);
+  opacity  : 0;
 }
 #envelope-wrapper.opening #letter-slide {
-  animation : letter-slide-up 1.5s 1.2s var(--transition) forwards;
+  animation: letter-slide-up 1.5s 1.2s var(--transition) forwards;
 }
 
 #letter-slide {
-  position  : absolute;
-  bottom    : 10px; left: 10px; right: 10px;
-  height    : 180px;
-  background: #fff9f0;
+  position     : absolute;
+  bottom: 10px; left: 10px; right: 10px;
+  height       : 180px;
+  background   : #fff9f0;
   border-radius: 4px;
-  transform : translateY(0);
-  opacity   : 0;
-  box-shadow: 0 -4px 20px rgba(0,0,0,.15);
-  display   : flex;
-  align-items: center;
+  transform    : translateY(0);
+  opacity      : 0;
+  box-shadow   : 0 -4px 20px rgba(0,0,0,.15);
+  display      : flex;
+  align-items  : center;
   justify-content: center;
-  overflow  : hidden;
+  overflow     : hidden;
 }
 .letter-preview {
   font-family: var(--font-sac);
@@ -212,7 +208,6 @@ section {
   to   { transform: translateY(-60px); opacity: 1; }
 }
 
-/* ── Glow ring ───────────────────────────────────────── */
 .env-glow-ring {
   width     : 380px; height: 20px;
   background: radial-gradient(ellipse at center, rgba(255,100,180,.5) 0%, transparent 70%);
@@ -221,18 +216,16 @@ section {
 }
 @keyframes glow-pulse {
   0%,100% { opacity: .6; transform: scaleX(1); }
-  50%      { opacity: 1;  transform: scaleX(1.1); }
+  50%     { opacity: 1;  transform: scaleX(1.1); }
 }
 
-/* ── Heart burst ─────────────────────────────────────── */
 #heart-burst {
-  position: absolute;
-  inset    : 0;
+  position      : absolute;
+  inset         : 0;
   pointer-events: none;
-  z-index  : 20;
+  z-index       : 20;
 }
 
-/* ── Intro text / button ─────────────────────────────── */
 #intro-tagline {
   font-family: var(--font-sac);
   font-size  : 1.8rem;
@@ -245,21 +238,21 @@ section {
 }
 
 #open-letter-btn {
-  margin-top : 24px;
-  padding    : 14px 36px;
-  font-family: var(--font-hand);
-  font-size  : 1.3rem;
-  font-weight: 700;
-  background : linear-gradient(135deg, #e8319c, #ff6abf);
-  color      : #fff;
-  border     : none;
+  margin-top   : 24px;
+  padding      : 14px 36px;
+  font-family  : var(--font-hand);
+  font-size    : 1.3rem;
+  font-weight  : 700;
+  background   : linear-gradient(135deg, #e8319c, #ff6abf);
+  color        : #fff;
+  border       : none;
   border-radius: 50px;
-  cursor     : pointer;
-  z-index    : 6;
-  box-shadow : 0 6px 30px rgba(232,49,156,.5);
-  opacity    : 0;
-  animation  : fade-in-up 2s 3s var(--transition) forwards;
-  transition : transform .3s, box-shadow .3s;
+  cursor       : pointer;
+  z-index      : 6;
+  box-shadow   : 0 6px 30px rgba(232,49,156,.5);
+  opacity      : 0;
+  animation    : fade-in-up 2s 3s var(--transition) forwards;
+  transition   : transform .3s, box-shadow .3s;
 }
 #open-letter-btn:hover {
   transform : translateY(-4px) scale(1.04);
@@ -272,7 +265,7 @@ section {
 }
 
 /* ═══════════════════════════════════════════════════════
-   SECTION 2 — LOVE LETTER
+   LETTER SECTION
 ═══════════════════════════════════════════════════════ */
 #letter-section {
   background: linear-gradient(160deg, #1a0a0f 0%, #0d0510 100%);
@@ -280,37 +273,40 @@ section {
 }
 
 #letter-book {
-  width     : min(680px, 96vw);
-  position  : relative;
+  width   : min(680px, 96vw);
+  position: relative;
 }
 
-/* ── Letter pages ─────────────────────────────────────── */
 .letter-page {
-  display   : none;
-  perspective: 2000px;
+  display: none;
 }
-.letter-page.active-page { display: block; }
+.letter-page.active-page {
+  display  : block;
+  animation: pageFadeIn 0.6s ease;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
 
 .page-inner {
-  background: var(--paper-bg);
+  background   : var(--paper-bg);
   border-radius: 4px 12px 12px 4px;
-  padding    : 48px 52px;
-  position   : relative;
-  min-height : 520px;
-  box-shadow :
+  padding      : 48px 52px;
+  position     : relative;
+  min-height   : 520px;
+  box-shadow   :
     0 20px 60px rgba(0,0,0,.6),
     inset 0 0 0 1px rgba(180,140,100,.2),
     4px 0 8px rgba(0,0,0,.2);
-
-  /* Slightly burned / aged edges */
   border-image: linear-gradient(to right, #c8a070, #e8d0a0) 1;
 }
 
-/* Ruled lines */
 .page-lines {
-  position: absolute;
-  inset    : 80px 48px 48px;
-  background: repeating-linear-gradient(
+  position      : absolute;
+  inset         : 80px 48px 48px;
+  background    : repeating-linear-gradient(
     to bottom,
     transparent,
     transparent 31px,
@@ -320,28 +316,29 @@ section {
   pointer-events: none;
 }
 
-/* Left margin line */
 .page-inner::before {
-  content  : '';
-  position : absolute;
-  top      : 48px; bottom: 48px; left: 68px;
-  width    : 1px;
+  content   : '';
+  position  : absolute;
+  top: 48px; bottom: 48px; left: 68px;
+  width     : 1px;
   background: rgba(200,120,120,.3);
 }
 
 .letter-heading {
-  font-family: var(--font-great);
-  font-size  : 2rem;
-  color      : var(--rose);
+  font-family  : var(--font-great);
+  font-size    : 2rem;
+  color        : var(--rose);
   margin-bottom: 20px;
 }
 
 .letter-body {
-  font-family: var(--font-cave);
-  font-size  : 1.15rem;
-  line-height: 2;
-  color      : var(--ink);
+  font-family  : var(--font-cave);
+  font-size    : 1.15rem;
+  line-height  : 2;
+  color        : var(--ink);
   margin-bottom: 12px;
+  opacity      : 1;
+  visibility   : visible;
 }
 
 .letter-signature {
@@ -352,7 +349,7 @@ section {
   text-align : right;
 }
 
-/* ── Page controls ────────────────────────────────────── */
+/* Page controls */
 #page-controls {
   display        : flex;
   align-items    : center;
@@ -362,20 +359,19 @@ section {
 }
 
 #page-controls button {
-  padding    : 10px 28px;
-  background : linear-gradient(135deg, #e8319c, #ff6abf);
-  color      : #fff;
-  border     : none;
+  padding      : 10px 28px;
+  background   : linear-gradient(135deg, #e8319c, #ff6abf);
+  color        : #fff;
+  border       : none;
   border-radius: 50px;
-  font-family: var(--font-hand);
-  font-size  : 1rem;
-  cursor     : pointer;
-  transition : transform .3s, opacity .3s;
+  font-family  : var(--font-hand);
+  font-size    : 1rem;
+  cursor       : pointer;
+  transition   : transform .3s, opacity .3s;
 }
 #page-controls button:disabled {
-  opacity: .3;
-  cursor : not-allowed;
-  transform: none !important;
+  opacity  : .3;
+  cursor   : not-allowed;
 }
 #page-controls button:not(:disabled):hover { transform: scale(1.05); }
 
@@ -385,20 +381,8 @@ section {
   font-size  : 1rem;
 }
 
-/* ── Typewriter cursor ───────────────────────────────── */
-.typewriter::after {
-  content   : '|';
-  animation : blink .7s infinite;
-}
-.typewriter.done::after { display: none; }
-
-@keyframes blink {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0; }
-}
-
 /* ═══════════════════════════════════════════════════════
-   SECTION 3 — NIGHT SKY
+   NIGHT SKY SECTION
 ═══════════════════════════════════════════════════════ */
 #night-sky-section {
   background: var(--night-bg);
@@ -407,61 +391,64 @@ section {
 
 #night-canvas {
   position: absolute;
-  inset    : 0;
-  width    : 100%;
-  height   : 100%;
+  inset   : 0;
+  width   : 100%;
+  height  : 100%;
 }
 
 #constellation-label {
   position   : relative;
   z-index    : 5;
-  font-family: var(--font-sac);
+  font-family: 'Satisfy', cursive;
   font-size  : 2rem;
   color      : rgba(255,220,240,.8);
   text-shadow: 0 0 20px rgba(255,150,200,.5);
   text-align : center;
-  margin-bottom: 300px;   /* push below canvas art area */
+  margin-bottom: 300px;
+  letter-spacing: 2px;
+  word-spacing  : 4px;
+  line-height   : 1.8;
   animation  : pulse-text 3s ease-in-out infinite;
 }
 
 @keyframes pulse-text {
   0%,100% { opacity: .7; }
-  50%      { opacity: 1; }
+  50%     { opacity: 1; }
 }
 
 /* ═══════════════════════════════════════════════════════
-   SECTION 4 — MEMORY GARDEN
+   MEMORY GARDEN
 ═══════════════════════════════════════════════════════ */
 #garden-section {
-  background: linear-gradient(180deg, #0a1a0a 0%, #0d2010 60%, #070d07 100%);
-  min-height: 100vh;
+  background    : linear-gradient(180deg, #0a1a0a 0%, #0d2010 60%, #070d07 100%);
+  min-height    : 100vh;
   flex-direction: column;
 }
 
 #garden-bg-canvas {
-  position: absolute;
-  inset    : 0;
-  width    : 100%;
-  height   : 100%;
+  position      : absolute;
+  inset         : 0;
+  width         : 100%;
+  height        : 100%;
   pointer-events: none;
 }
 
 .garden-title {
-  font-family: var(--font-great);
-  font-size  : 3rem;
-  color      : #f9c8d8;
-  text-shadow: 0 0 30px rgba(255,100,180,.5);
-  position   : relative;
-  z-index    : 5;
+  font-family  : var(--font-great);
+  font-size    : 3rem;
+  color        : #f9c8d8;
+  text-shadow  : 0 0 30px rgba(255,100,180,.5);
+  position     : relative;
+  z-index      : 5;
   margin-bottom: 8px;
 }
 
 .garden-subtitle {
-  font-family: var(--font-cave);
-  font-size  : 1.1rem;
-  color      : rgba(200,255,200,.7);
-  position   : relative;
-  z-index    : 5;
+  font-family  : var(--font-cave);
+  font-size    : 1.1rem;
+  color        : rgba(200,255,200,.7);
+  position     : relative;
+  z-index      : 5;
   margin-bottom: 40px;
 }
 
@@ -475,22 +462,20 @@ section {
   z-index        : 5;
 }
 
-/* ── Flower ───────────────────────────────────────────── */
 .flower {
-  display       : flex;
-  flex-direction: column;
-  align-items   : center;
-  cursor        : pointer;
-  position      : relative;
+  display         : flex;
+  flex-direction  : column;
+  align-items     : center;
+  cursor          : pointer;
   transform-origin: bottom center;
-  animation     : sway 3s ease-in-out infinite;
+  animation       : sway 3s ease-in-out infinite;
 }
 .flower:nth-child(even) { animation-duration: 4.2s; animation-direction: alternate; }
 .flower:nth-child(3n)   { animation-duration: 3.7s; }
 
 @keyframes sway {
   0%,100% { transform: rotate(-4deg); }
-  50%      { transform: rotate(4deg); }
+  50%     { transform: rotate(4deg); }
 }
 
 .flower-emoji {
@@ -504,36 +489,35 @@ section {
 }
 
 .flower-stem {
-  width     : 3px;
-  height    : 30px;
-  background: linear-gradient(to bottom, #3a9a3a, #1a5a1a);
+  width        : 3px;
+  height       : 30px;
+  background   : linear-gradient(to bottom, #3a9a3a, #1a5a1a);
   border-radius: 2px;
 }
 
-/* ── Flower card modal ───────────────────────────────── */
 #flower-card-modal {
-  position  : fixed;
-  inset     : 0;
-  background: rgba(0,0,0,.75);
-  display   : flex;
-  align-items: center;
+  position       : fixed;
+  inset          : 0;
+  background     : rgba(0,0,0,.75);
+  display        : flex;
+  align-items    : center;
   justify-content: center;
-  z-index   : 100;
+  z-index        : 100;
   backdrop-filter: blur(6px);
-  animation : fade-in .4s var(--transition);
+  animation      : fade-in .4s var(--transition);
 }
 #flower-card-modal.hidden { display: none; }
 
 .flower-card-inner {
-  background: linear-gradient(135deg, #fff0f8, #ffe0f0);
+  background   : linear-gradient(135deg, #fff0f8, #ffe0f0);
   border-radius: 20px;
-  padding   : 40px 48px;
-  max-width : 480px;
-  width     : 90vw;
-  text-align: center;
-  position  : relative;
-  box-shadow: 0 20px 80px rgba(220,50,120,.4);
-  animation : card-pop .5s var(--transition);
+  padding      : 40px 48px;
+  max-width    : 480px;
+  width        : 90vw;
+  text-align   : center;
+  position     : relative;
+  box-shadow   : 0 20px 80px rgba(220,50,120,.4);
+  animation    : card-pop .5s var(--transition);
 }
 
 @keyframes card-pop {
@@ -545,10 +529,10 @@ section {
   position  : absolute;
   top: 12px; right: 16px;
   background: none;
-  border     : none;
-  font-size  : 1.3rem;
-  cursor     : pointer;
-  color      : #c0396b;
+  border    : none;
+  font-size : 1.3rem;
+  cursor    : pointer;
+  color     : #c0396b;
 }
 
 #flower-card-content {
@@ -559,7 +543,7 @@ section {
 }
 
 /* ═══════════════════════════════════════════════════════
-   SECTION 5 — FINAL CONFESSION
+   FINAL CONFESSION
 ═══════════════════════════════════════════════════════ */
 #final-section {
   background: linear-gradient(160deg, #0a0215 0%, #150520 100%);
@@ -567,42 +551,38 @@ section {
 }
 
 #final-particles-canvas {
-  position: absolute;
-  inset    : 0;
-  width    : 100%;
-  height   : 100%;
+  position      : absolute;
+  inset         : 0;
+  width         : 100%;
+  height        : 100%;
   pointer-events: none;
 }
 
 #final-letter-wrapper {
-  width    : min(680px, 95vw);
-  position : relative;
-  z-index  : 5;
-  display  : flex;
+  width         : min(680px, 95vw);
+  position      : relative;
+  z-index       : 5;
+  display       : flex;
   flex-direction: column;
-  gap      : 48px;
+  gap           : 48px;
 }
 
-/* ── Final handwritten letter ────────────────────────── */
 #final-letter {
-  background: var(--paper-bg);
+  background   : var(--paper-bg);
   border-radius: 8px;
-  padding   : 52px 56px;
-  box-shadow: 0 20px 80px rgba(0,0,0,.7);
-  position  : relative;
-  overflow  : hidden;
+  padding      : 52px 56px;
+  box-shadow   : 0 20px 80px rgba(0,0,0,.7);
+  position     : relative;
+  overflow     : hidden;
 }
 
-/* Burned / torn edges pseudo-element */
 #final-letter::before {
-  content  : '';
-  position : absolute;
-  inset    : 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='burn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23burn)' opacity='.04'/%3E%3C/svg%3E");
+  content       : '';
+  position      : absolute;
+  inset         : 0;
   pointer-events: none;
   border-radius : 8px;
-  border   : 12px solid transparent;
-  box-shadow: inset 0 0 20px rgba(100,50,0,.2);
+  box-shadow    : inset 0 0 20px rgba(100,50,0,.2);
 }
 
 .final-line {
@@ -630,60 +610,60 @@ section {
 }
 .final-signature.revealed { opacity: 1; }
 
-/* ── Response card ───────────────────────────────────── */
+/* Response card */
 #response-card {
-  background : rgba(255,255,255,.05);
-  border     : 1px solid rgba(255,150,200,.2);
-  border-radius: 20px;
-  padding    : 48px;
+  background     : rgba(255,255,255,.05);
+  border         : 1px solid rgba(255,150,200,.2);
+  border-radius  : 20px;
+  padding        : 48px;
   backdrop-filter: blur(10px);
-  box-shadow : 0 8px 40px rgba(200,50,120,.2);
+  box-shadow     : 0 8px 40px rgba(200,50,120,.2);
 }
 
 #response-card h3 {
-  font-family: var(--font-great);
-  font-size  : 2.2rem;
-  color      : #ffb3d4;
-  text-align : center;
+  font-family  : var(--font-great);
+  font-size    : 2.2rem;
+  color        : #ffb3d4;
+  text-align   : center;
   margin-bottom: 32px;
 }
 
 #response-card label {
-  display    : block;
-  font-family: var(--font-cave);
-  font-size  : 1rem;
-  color      : #e8aac8;
+  display      : block;
+  font-family  : var(--font-cave);
+  font-size    : 1rem;
+  color        : #e8aac8;
   margin-bottom: 8px;
-  margin-top : 20px;
+  margin-top   : 20px;
 }
 
 #msg-input, #feeling-input {
-  width     : 100%;
-  min-height: 120px;
-  background: rgba(255,255,255,.07);
-  border    : 1px solid rgba(255,150,200,.3);
+  width        : 100%;
+  min-height   : 120px;
+  background   : rgba(255,255,255,.07);
+  border       : 1px solid rgba(255,150,200,.3);
   border-radius: 12px;
-  padding   : 16px;
-  font-family: var(--font-cave);
-  font-size  : 1.1rem;
-  color      : #fff;
-  resize    : vertical;
-  transition : border-color .3s, box-shadow .3s;
+  padding      : 16px;
+  font-family  : var(--font-cave);
+  font-size    : 1.1rem;
+  color        : #fff;
+  resize       : vertical;
+  transition   : border-color .3s, box-shadow .3s;
 }
 #msg-input:focus, #feeling-input:focus {
-  outline    : none;
+  outline     : none;
   border-color: rgba(255,150,200,.8);
-  box-shadow : 0 0 20px rgba(255,100,180,.2);
+  box-shadow  : 0 0 20px rgba(255,100,180,.2);
 }
 
 #response-error {
-  background: rgba(255,80,80,.15);
-  border    : 1px solid rgba(255,80,80,.4);
+  background   : rgba(255,80,80,.15);
+  border       : 1px solid rgba(255,80,80,.4);
   border-radius: 8px;
-  padding   : 12px 16px;
-  color     : #ff9999;
-  font-family: var(--font-cave);
-  margin-top: 12px;
+  padding      : 12px 16px;
+  color        : #ff9999;
+  font-family  : var(--font-cave);
+  margin-top   : 12px;
 }
 #response-error.hidden { display: none; }
 
@@ -696,13 +676,13 @@ section {
 }
 
 #send-btn, #later-btn {
-  padding    : 14px 40px;
-  border     : none;
+  padding      : 14px 40px;
+  border       : none;
   border-radius: 50px;
-  font-family: var(--font-hand);
-  font-size  : 1.2rem;
-  cursor     : pointer;
-  transition : transform .3s, box-shadow .3s;
+  font-family  : var(--font-hand);
+  font-size    : 1.2rem;
+  cursor       : pointer;
+  transition   : transform .3s, box-shadow .3s;
 }
 
 #send-btn {
@@ -719,20 +699,17 @@ section {
 }
 #later-btn:hover { background: rgba(255,255,255,.12); }
 
-#response-success {
-  text-align: center;
-  padding   : 32px;
-}
+#response-success { text-align: center; padding: 32px; }
 #response-success.hidden { display: none; }
 
 .success-heart {
-  font-size : 4rem;
-  animation : heart-beat 1s ease-in-out infinite;
+  font-size: 4rem;
+  animation: heart-beat 1s ease-in-out infinite;
 }
 
 @keyframes heart-beat {
   0%,100% { transform: scale(1); }
-  50%      { transform: scale(1.25); }
+  50%     { transform: scale(1.25); }
 }
 
 #success-message {
@@ -747,19 +724,19 @@ section {
    SECTION NEXT BUTTONS
 ═══════════════════════════════════════════════════════ */
 .section-next-btn {
-  margin-top : 40px;
-  padding    : 14px 40px;
-  background : linear-gradient(135deg, #7b2d8b, #c060c0);
-  color      : #fff;
-  border     : none;
+  margin-top   : 40px;
+  padding      : 14px 40px;
+  background   : linear-gradient(135deg, #7b2d8b, #c060c0);
+  color        : #fff;
+  border       : none;
   border-radius: 50px;
-  font-family: var(--font-hand);
-  font-size  : 1.2rem;
-  cursor     : pointer;
-  z-index    : 10;
-  position   : relative;
-  box-shadow : 0 6px 30px rgba(180,80,200,.4);
-  transition : transform .3s, box-shadow .3s;
+  font-family  : var(--font-hand);
+  font-size    : 1.2rem;
+  cursor       : pointer;
+  z-index      : 10;
+  position     : relative;
+  box-shadow   : 0 6px 30px rgba(180,80,200,.4);
+  transition   : transform .3s, box-shadow .3s;
 }
 .section-next-btn:hover {
   transform : translateY(-4px);
@@ -770,24 +747,24 @@ section {
    NAVIGATION DOTS
 ═══════════════════════════════════════════════════════ */
 #section-nav {
-  position : fixed;
-  right    : 20px;
-  top      : 50%;
-  transform: translateY(-50%);
-  display  : flex;
+  position      : fixed;
+  right         : 20px;
+  top           : 50%;
+  transform     : translateY(-50%);
+  display       : flex;
   flex-direction: column;
-  gap      : 10px;
-  z-index  : 200;
+  gap           : 10px;
+  z-index       : 200;
 }
 
 .nav-dot {
-  width    : 10px;
-  height   : 10px;
+  width        : 10px;
+  height       : 10px;
   border-radius: 50%;
-  background: rgba(255,255,255,.3);
-  cursor   : pointer;
-  transition: background .3s, transform .3s;
-  border   : 1px solid rgba(255,255,255,.4);
+  background   : rgba(255,255,255,.3);
+  cursor       : pointer;
+  transition   : background .3s, transform .3s;
+  border       : 1px solid rgba(255,255,255,.4);
 }
 .nav-dot.active {
   background: #ff6abf;
@@ -799,18 +776,18 @@ section {
    MUSIC PLAYER
 ═══════════════════════════════════════════════════════ */
 #music-player {
-  position  : fixed;
-  bottom    : 20px;
-  left      : 20px;
-  display   : flex;
-  align-items: center;
-  gap       : 10px;
-  background: rgba(0,0,0,.65);
+  position       : fixed;
+  bottom         : 20px;
+  left           : 20px;
+  display        : flex;
+  align-items    : center;
+  gap            : 10px;
+  background     : rgba(0,0,0,.65);
   backdrop-filter: blur(12px);
-  border    : 1px solid rgba(255,150,200,.2);
-  border-radius: 50px;
-  padding   : 8px 18px;
-  z-index   : 200;
+  border         : 1px solid rgba(255,150,200,.2);
+  border-radius  : 50px;
+  padding        : 8px 18px;
+  z-index        : 200;
 }
 
 #mute-btn {
@@ -822,18 +799,18 @@ section {
 }
 
 #volume-slider {
-  width     : 80px;
+  width       : 80px;
   accent-color: #ff6abf;
-  cursor    : pointer;
+  cursor      : pointer;
 }
 
 #now-playing {
-  font-family: var(--font-cave);
-  font-size  : 0.85rem;
-  color      : #ffc0d8;
-  max-width  : 140px;
-  white-space: nowrap;
-  overflow   : hidden;
+  font-family  : var(--font-cave);
+  font-size    : 0.85rem;
+  color        : #ffc0d8;
+  max-width    : 140px;
+  white-space  : nowrap;
+  overflow     : hidden;
   text-overflow: ellipsis;
 }
 
@@ -846,21 +823,20 @@ section {
    MASCOTS
 ═══════════════════════════════════════════════════════ */
 .mascot {
-  position  : fixed;
-  bottom    : 80px;
-  right     : 24px;
-  z-index   : 150;
-  display   : flex;
+  position      : fixed;
+  bottom        : 80px;
+  right         : 24px;
+  z-index       : 150;
+  display       : none;
   flex-direction: column;
-  align-items: flex-end;
-  cursor    : pointer;
-  transition: transform .3s;
-  animation : mascot-idle 2s ease-in-out infinite;
+  align-items   : flex-end;
+  cursor        : pointer;
+  animation     : mascot-idle 2s ease-in-out infinite;
 }
 
 @keyframes mascot-idle {
   0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
+  50%     { transform: translateY(-8px); }
 }
 
 .mascot-body   { font-size: 2.6rem; }
@@ -893,15 +869,13 @@ section {
   z-index       : 9999;
 }
 
-/* ═══════════════════════════════════════════════════════
-   FADE-IN utility
-═══════════════════════════════════════════════════════ */
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+/* Hidden utility */
+.hidden { display: none !important; }
 
 /* ═══════════════════════════════════════════════════════
-   RESPONSIVE
+   MOBILE RESPONSIVE
 ═══════════════════════════════════════════════════════ */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   #envelope-3d, .env-body { width: 280px; height: 190px; }
   .env-left-flap  { border-width: 95px 0 0 140px; }
   .env-right-flap { border-width: 95px 140px 0 0; }
@@ -909,86 +883,90 @@ section {
   .env-top-flap   { height: 95px; }
   #wax-seal       { top: 40px; }
 
-  .page-inner { padding: 32px 28px; }
-  .garden-title { font-size: 2.2rem; }
-  #final-letter { padding: 36px 28px; }
-  #response-card { padding: 28px 24px; }
-  #music-player { bottom: 12px; left: 12px; }
-  .mascot { bottom: 90px; right: 12px; }
-}
-/* Add this to the bottom of style.css */
-.letter-body {
-  opacity: 1 !important;
-  color: #3a2a1a !important; /* Ensure ink color is dark */
-  visibility: visible !important;
-  display: block !important;
-}
-
-.typewriter {
-  min-height: 1.5em; /* Prevents the page from collapsing when text is cleared */
-}
-
-.letter-page.active-page {
-  display: flex !important;
-  animation: fade-in 0.8s ease-in-out;
-}
-/* ═══════════════════════════════════════════════════════
-   STAR CONSTELLATION PAGE — MOBILE FIX ONLY
-═══════════════════════════════════════════════════════ */
-
-/* New font just for the constellation page */
-@import url('https://fonts.googleapis.com/css2?family=Satisfy&family=Pacifico&display=swap');
-
-#night-sky-section {
-  position: relative;
-  overflow: hidden;
-}
-
-#constellation-label {
-  font-family: 'Satisfy', cursive;
-  letter-spacing: 2px;
-  word-spacing: 4px;
-  line-height: 1.8;
-  z-index: 10;
-  position: relative;
-}
-
-@media (max-width: 768px) {
-
-  #night-sky-section {
-    min-height: 100vh;
-    padding: 30px 16px;
-  }
-
-  #constellation-label {
-    font-family: 'Pacifico', cursive;
-    font-size: 1.3rem;
-    color: #ffd6ec;
-    text-shadow:
-      0 0 10px rgba(255, 150, 200, 0.5),
-      0 0 30px rgba(255, 100, 180, 0.3);
+  #intro-tagline {
+    font-size : 1.3rem;
+    padding   : 0 20px;
     text-align: center;
-    padding: 0 16px;
-    margin-bottom: 180px;
-    letter-spacing: 3px;
-    word-spacing: 6px;
-    line-height: 2;
   }
 
+  #open-letter-btn {
+    font-size: 1.1rem;
+    padding  : 12px 28px;
+  }
+
+  #letter-section { padding: 40px 12px; }
+  #letter-book    { width: 98vw; }
+  .page-inner     { padding: 28px 20px; min-height: 420px; }
+  .letter-heading { font-size: 1.5rem; }
+  .letter-body    { font-size: 1rem; line-height: 1.8; }
+  .letter-signature { font-size: 1.2rem; }
+
+  #page-controls { flex-wrap: wrap; justify-content: center; gap: 10px; }
+  #page-controls button { padding: 10px 24px; font-size: 0.95rem; }
+  #page-indicator { width: 100%; text-align: center; order: -1; margin-bottom: 6px; }
+
+  /* Night Sky Mobile */
+  #night-sky-section { min-height: 100vh; padding: 30px 16px; }
+  #constellation-label {
+    font-family   : 'Pacifico', cursive;
+    font-size     : 1.3rem;
+    color         : #ffd6ec;
+    text-shadow   : 0 0 10px rgba(255,150,200,.5), 0 0 30px rgba(255,100,180,.3);
+    text-align    : center;
+    padding       : 0 16px;
+    margin-bottom : 180px;
+    letter-spacing: 3px;
+    word-spacing  : 6px;
+    line-height   : 2;
+  }
   #sky-next-btn {
     font-family: 'Satisfy', cursive;
-    font-size: 1rem;
-    padding: 12px 30px;
-    z-index: 20;
-    position: relative;
-    margin-top: 10px;
+    font-size  : 1rem;
+    padding    : 12px 30px;
   }
+
+  /* Garden Mobile */
+  .garden-title    { font-size: 1.8rem; }
+  .garden-subtitle { font-size: 0.9rem; padding: 0 20px; text-align: center; }
+  #garden-container { gap: 18px; padding: 0 10px; }
+  .flower-emoji     { font-size: 2.2rem; }
+  .flower-card-inner { padding: 28px 24px; width: 92vw; }
+  #flower-card-content { font-size: 1.1rem; }
+
+  /* Final Mobile */
+  #final-letter   { padding: 28px 22px; }
+  .final-line     { font-size: 1.05rem; line-height: 1.8; }
+  .final-signature{ font-size: 1.5rem; }
+  #response-card  { padding: 24px 18px; }
+  #response-card h3 { font-size: 1.6rem; }
+  #msg-input, #feeling-input { font-size: 1rem; min-height: 100px; }
+  #send-btn, #later-btn { padding: 12px 28px; font-size: 1rem; }
+
+  /* Music Player Mobile */
+  #music-player  { bottom: 8px; left: 8px; padding: 6px 12px; border-radius: 30px; }
+  #now-playing   { display: none; }
+  #volume-slider { width: 50px; }
+  #visualizer-canvas { width: 40px; height: 18px; }
+
+  /* Nav Dots Mobile */
+  #section-nav { right: 10px; gap: 8px; }
+  .nav-dot     { width: 8px; height: 8px; }
+
+  /* Mascots Mobile */
+  .mascot       { bottom: 60px; right: 10px; }
+  .mascot-body  { font-size: 2rem; }
+  .mascot-bubble { font-size: 0.7rem; padding: 4px 8px; max-width: 160px; white-space: normal; }
 }
 
 @media (max-width: 380px) {
-  #constellation-label {
-    font-size: 1.1rem;
-    margin-bottom: 150px;
-    letter-spacing: 2px;
-  }
+  #constellation-label { font-size: 1.1rem; margin-bottom: 150px; }
+  .page-inner { padding: 20px 16px; min-height: 380px; }
+  .letter-heading { font-size: 1.3rem; }
+  .letter-body { font-size: 0.9rem; }
+  #envelope-3d, .env-body { width: 240px; height: 165px; }
+  .env-left-flap  { border-width: 82px 0 0 120px; }
+  .env-right-flap { border-width: 82px 120px 0 0; }
+  .env-bottom-flap{ border-width: 0 120px 82px; }
+  .env-top-flap   { height: 82px; }
+  #wax-seal       { top: 35px; }
 }
