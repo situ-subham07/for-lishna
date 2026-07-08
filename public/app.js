@@ -1019,7 +1019,13 @@ class LetterBook {
     this._typeCurrentPage();
   }
 
-  goTo(idx) {
+    goTo(idx) {
+    // If we are on the last page and click "Next/Finish"
+    if (idx >= this.total) {
+      showSection(2); // Move to Night Sky
+      return;
+    }
+    
     idx = clamp(idx, 0, this.total - 1);
     this.pages[this.current].classList.remove('active-page');
     this.current = idx;
@@ -1029,8 +1035,9 @@ class LetterBook {
   }
 
   _render() {
-    this.prevBtn.disabled    = this.current === 0;
-    this.nextBtn.disabled    = this.current === this.total - 1;
+    this.prevBtn.disabled = this.current === 0;
+    // Keep nextBtn enabled so "Finish" can be clicked
+    this.nextBtn.disabled = false; 
     this.nextBtn.textContent = this.current === this.total - 1 ? 'Finish ✨' : 'Next →';
     this.indicator.textContent = `Page ${this.current + 1} of ${this.total}`;
   }
