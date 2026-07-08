@@ -932,3 +932,63 @@ section {
   display: flex !important;
   animation: fade-in 0.8s ease-in-out;
 }
+/* ═══════════════════════════════════════════════════════
+   STAR CONSTELLATION PAGE — MOBILE FIX ONLY
+═══════════════════════════════════════════════════════ */
+
+/* New font just for the constellation page */
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&family=Pacifico&display=swap');
+
+#night-sky-section {
+  position: relative;
+  overflow: hidden;
+}
+
+#constellation-label {
+  font-family: 'Satisfy', cursive;
+  letter-spacing: 2px;
+  word-spacing: 4px;
+  line-height: 1.8;
+  z-index: 10;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+
+  #night-sky-section {
+    min-height: 100vh;
+    padding: 30px 16px;
+  }
+
+  #constellation-label {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.3rem;
+    color: #ffd6ec;
+    text-shadow:
+      0 0 10px rgba(255, 150, 200, 0.5),
+      0 0 30px rgba(255, 100, 180, 0.3);
+    text-align: center;
+    padding: 0 16px;
+    margin-bottom: 180px;
+    letter-spacing: 3px;
+    word-spacing: 6px;
+    line-height: 2;
+  }
+
+  #sky-next-btn {
+    font-family: 'Satisfy', cursive;
+    font-size: 1rem;
+    padding: 12px 30px;
+    z-index: 20;
+    position: relative;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  #constellation-label {
+    font-size: 1.1rem;
+    margin-bottom: 150px;
+    letter-spacing: 2px;
+  }
+}
