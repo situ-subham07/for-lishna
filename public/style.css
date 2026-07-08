@@ -916,3 +916,19 @@ section {
   #music-player { bottom: 12px; left: 12px; }
   .mascot { bottom: 90px; right: 12px; }
 }
+/* Add this to the bottom of style.css */
+.letter-body {
+  opacity: 1 !important;
+  color: #3a2a1a !important; /* Ensure ink color is dark */
+  visibility: visible !important;
+  display: block !important;
+}
+
+.typewriter {
+  min-height: 1.5em; /* Prevents the page from collapsing when text is cleared */
+}
+
+.letter-page.active-page {
+  display: flex !important;
+  animation: fade-in 0.8s ease-in-out;
+}
