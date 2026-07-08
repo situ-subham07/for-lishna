@@ -559,21 +559,25 @@ class NightSky {
     setTimeout(() => this._startConstellation(), 3000);
   }
 
-  _populateStars() {
-    const W = this.canvas.width, H = this.canvas.height;
-    this.stars = Array.from({ length: 400 }, () => ({
-      x : rand(0, W), y: rand(0, H),
-      r : rand(0.5, 2.5),
+   _populateStars() {
+    const W = this.canvas.width;
+    const H = this.canvas.height;
+    const isMobile = W < 768;
+    const count = isMobile ? 180 : 400;
+
+    this.stars = Array.from({ length: count }, () => ({
+      x : rand(0, W),
+      y : rand(0, H),
+      r : rand(0.4, isMobile ? 1.6 : 2.5),
       a : rand(0.3, 1),
       da: rand(0.004, 0.02) * (Math.random() > .5 ? 1 : -1),
-      tx: 0, ty: 0,   // target position (constellation)
+      tx: 0, ty: 0,
       moving: false,
-      connectTo: null  // index to draw line
+      connectTo: null
     }));
-  }
-
+  }  // index to draw line
   // LISHNA dot positions (normalized 0–1 coords, scaled at runtime)
-  _getLetterPoints(word) {
+   _getLetterPoints(word) {
     const letters = {
       'L': [[0,0],[0,1],[0.4,1]],
       'I': [[0.2,0],[0.2,1]],
@@ -582,23 +586,30 @@ class NightSky {
       'N': [[0,1],[0,0],[0.4,1],[0.4,0]],
       'A': [[0,1],[0.2,0],[0.4,1],[0.1,0.5],[0.3,0.5]],
       '❤': [[0.05,0.3],[0.2,0],[0.35,0.3],[0.2,0.7]],
-      'T': [[0,0],[0.4,0],[0.2,0],[0.2,1]],
-      'U': [[0,0],[0,0.7],[0.2,1],[0.4,0.7],[0.4,0]],
     };
-    const W = this.canvas.width, H = this.canvas.height;
-    const CX = W / 2, CY = H / 2;
-    const letterW = 50, spacing = 60;
-    const chars   = word.split('');
-    const totalW  = chars.length * spacing - (spacing - letterW);
-    let   startX  = CX - totalW / 2;
-    const points  = [];
+
+    const W = this.canvas.width;
+    const H = this.canvas.height;
+    const CX = W / 2;
+    const CY = H / 2;
+
+    const isMobile = W < 768;
+    const letterW  = isMobile ? 22 : 50;
+    const spacing  = isMobile ? 28 : 60;
+    const scaleY   = isMobile ? 45 : 100;
+    const offsetY  = isMobile ? -15 : -60;
+
+    const chars  = word.split('');
+    const totalW = chars.length * spacing - (spacing - letterW);
+    let startX   = CX - totalW / 2;
+    const points = [];
 
     chars.forEach(ch => {
       const pts = letters[ch] || [[0.2,0.5]];
       pts.forEach(p => {
         points.push({
           x: startX + p[0] * letterW,
-          y: CY - 60 + p[1] * 100
+          y: CY + offsetY + p[1] * scaleY
         });
       });
       startX += spacing;
@@ -606,21 +617,64 @@ class NightSky {
     return points;
   }
 
-  _startConstellation() {
-    this.label.textContent = 'The stars know this name...';
+   _startConstellation() {
+    const isMobile = this.canvas.width < 768;
+
+    this.label.textContent = isMobile
+      ? '✨ watch the stars ✨'
+      : 'The stars know this name...';
     this.phase = 'connect';
 
     const pts = this._getLetterPoints('LISHNA');
 
-    // Move some stars to constellation positions
     pts.forEach((pt, i) => {
       if (i < this.stars.length) {
         this.stars[i].tx     = pt.x;
         this.stars[i].ty     = pt.y;
         this.stars[i].moving = true;
-        this.stars[i].r      = 2.5;
+        this.stars[i].r      = isMobile ? 1.8 : 2.5;
       }
     });
+
+    setTimeout(() => {
+      this.label.innerHTML = isMobile
+        ? '✨<br>L I S H N A<br>✨'
+        : 'L I S H N A';
+      this.label.style.fontSize = isMobile ? '1.6rem' : '3rem';
+      this.label.style.color    = '#ffe0f0';
+    }, 3500);
+
+    setTimeout(() => {
+      this.label.innerHTML = isMobile
+        ? '<span style="font-size:2.5rem">❤️</span>'
+        : '❤️';
+      this.label.style.fontSize = isMobile ? '2rem' : '4rem';
+      const hPts = this._getLetterPoints('❤');
+      hPts.forEach((pt, i) => {
+        if (i < this.stars.length) {
+          this.stars[i].tx = pt.x;
+          this.stars[i].ty = pt.y;
+        }
+      });
+    }, 7000);
+
+    setTimeout(() => {
+      if (isMobile) {
+        this.label.innerHTML = '💫<br>SITU ❤️ LISHNA<br>💫';
+        this.label.style.fontSize = '1.2rem';
+      } else {
+        this.label.textContent = 'S I T U  ❤️  L I S H N A';
+        this.label.style.fontSize = '2rem';
+      }
+      const fPts = this._getLetterPoints('SITUHLISHNA');
+      fPts.forEach((pt, i) => {
+        if (i < this.stars.length) {
+          this.stars[i].tx = pt.x;
+          this.stars[i].ty = pt.y;
+        }
+      });
+    }, 11000);
+  }
 
     setTimeout(() => {
       this.label.textContent = 'L I S H N A';
